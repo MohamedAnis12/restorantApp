@@ -59,10 +59,10 @@ class _LoginViewState extends State<LoginView> {
                   ),
                   SizedBox(height: 10),
                   Center(
-                    child: Image.asset(
-                      "assets/images/burgerlogo.png",
-                      height: 150,
-                    ),
+                    // child: Image.asset(
+                    //   "assets/images/LogoBurger.png",
+                    //   height: 150,
+                    // ),
                   ),
 
                   SizedBox(height: 40),
