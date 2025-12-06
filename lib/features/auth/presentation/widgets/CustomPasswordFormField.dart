@@ -1,33 +1,43 @@
 import 'package:flutter/material.dart';
 
-class CustomTextFormField extends StatelessWidget {
-  const CustomTextFormField({
+class CustomPasswordFormField extends StatefulWidget {
+  const CustomPasswordFormField({
     super.key,
+    required this.controller,
     required this.hintText,
-    required this.icon,
-    this.validator,
-    this.controller,
-    this.obscureText = false,
+    required this.validator,
   });
-
+  final TextEditingController controller;
   final String hintText;
-  final IconData icon;
+  final String? Function(String?) validator;
+  @override
+  State<CustomPasswordFormField> createState() =>
+      _CustomPasswordFormFieldState();
+}
 
-  final String? Function(String?)? validator; // ← مهم
-  final TextEditingController? controller; // ← مهم لو عايز تجيب القيم
-  final bool obscureText; // ← مهم لو هي Password
-
+class _CustomPasswordFormFieldState extends State<CustomPasswordFormField> {
+  bool obscureText = true;
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
+    return SizedBox(
+      height: 56,
       child: TextFormField(
-        controller: controller,
         obscureText: obscureText,
+        controller: widget.controller,
         decoration: InputDecoration(
-          hintText: hintText,
+          hintText: widget.hintText,
           errorStyle: TextStyle(height: .001, fontSize: 16),
-          prefixIcon: Icon(icon),
+          prefixIcon: Icon(Icons.lock),
+          suffix: IconButton(
+            onPressed: () {
+              setState(() {
+                obscureText = !obscureText;
+              });
+            },
+            icon: obscureText
+                ? const Icon(Icons.visibility_outlined)
+                : const Icon(Icons.visibility_off_outlined),
+          ),
           filled: true,
           fillColor: Color(0xfff8f8f8).withOpacity(.3),
 
@@ -51,7 +61,7 @@ class CustomTextFormField extends StatelessWidget {
           ),
         ),
 
-        validator: validator, // ← كده تمام
+        validator: widget.validator, // ← كده تمام
       ),
     );
   }

@@ -9,6 +9,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class MyHomePage extends StatelessWidget {
   final List<Widget> pages = [HomeView(), CartView(), ProfileView()];
 
+   MyHomePage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(

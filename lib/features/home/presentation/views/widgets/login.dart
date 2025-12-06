@@ -1,4 +1,4 @@
-import 'package:craxe/features/Login/presentation/views/login_view.dart';
+import 'package:craxe/features/auth/presentation/views/login_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -19,11 +19,7 @@ class Login extends StatelessWidget {
             ),
             IconButton(
               onPressed: () {
-                Get.to(
-                  LoginView(),
-                  transition: Transition.fade,
-                  duration: Duration(seconds: 1),
-                );
+                Get.toNamed('/login');
               },
               icon: Icon(Icons.person, size: 46),
             ),
