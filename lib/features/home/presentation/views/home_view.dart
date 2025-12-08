@@ -15,10 +15,7 @@ class HomeView extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              SizedBox(
-                height: 80,
-                child: Login(),
-                ),
+              SizedBox(height: 80, child: Login()),
               CustomCategories(),
               CustomeHederImage(),
               Row(
