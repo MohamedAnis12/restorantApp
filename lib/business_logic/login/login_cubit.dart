@@ -26,6 +26,11 @@ class LoginCubit extends Cubit<LoginStates> {
       if (login.token != null) {
         CasheHelper().saveData(key: 'userName', value: login.user?.name ?? '');
         CasheHelper().saveData(
+          key: 'userId',
+          value: login.user?.id?.toString() ?? '', // حفظ الـ ID كنص
+        );
+
+        CasheHelper().saveData(
           key: 'userEmail',
           value: login.user?.email ?? '',
         );
@@ -33,10 +38,7 @@ class LoginCubit extends Cubit<LoginStates> {
           key: 'userImage',
           value: login.user?.image ?? '',
         );
-        CasheHelper().saveData(
-          key: 'TOKEN',
-          value: login.token!,
-        ); 
+        CasheHelper().saveData(key: 'TOKEN', value: login.token!);
         Get.offAllNamed('/home');
       }
       emit(LoginSuccessState(loginModel: login));

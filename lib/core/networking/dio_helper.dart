@@ -15,8 +15,6 @@ class DioHelper {
     );
   }
 
-  // في ملف dio_helper.dart
-
   static Future<Response> postData({
     required String url,
     required Map<String, dynamic> data,
@@ -25,8 +23,7 @@ class DioHelper {
     // 💡 1. قراءة الـ Token
     String? token = CasheHelper().getData(key: 'TOKEN') as String?;
 
-    
-    return await dio.post(
+    final response = await dio.post(
       url,
       data: data,
       queryParameters: query,
@@ -36,14 +33,17 @@ class DioHelper {
           'Authorization': token != null ? 'Bearer $token' : null,
           'Content-Type': 'application/json',
         },
-        
       ),
     );
-    
-  }
-  // في ملف dio_helper.dart
 
-  // في ملف dio_helper.dart، داخل دالة getData
+    // 💡 طباعة الرد الخام للتحقق من النجاح الزائف
+    print('--- POST REQUEST RAW RESPONSE ---');
+    print('Status: ${response.statusCode}');
+    print('Data: ${response.data}');
+    print('---------------------------------');
+
+    return response;
+  }
 
   static Future<Response> getData({
     required String url,
