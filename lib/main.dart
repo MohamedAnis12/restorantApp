@@ -2,6 +2,7 @@ import 'package:craxe/business_logic/home/Home_Cubit.dart';
 import 'package:craxe/business_logic/login/login_cubit.dart';
 import 'package:craxe/business_logic/register/register_cubit.dart';
 import 'package:craxe/core/networking/dio_helper.dart';
+import 'package:craxe/features/addNewItem/presentation/views/addNewItem.dart';
 import 'package:craxe/features/auth/controller/auth_controller.dart';
 import 'package:craxe/features/auth/presentation/views/login_view.dart';
 import 'package:craxe/features/auth/presentation/views/register_view.dart';
@@ -25,54 +26,61 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      initialRoute: '/login',
-      theme: ThemeData.light(),
-      darkTheme: ThemeData.dark(),
-      themeMode: ThemeManager().getTheme(),
-      getPages: [
-        GetPage(
-          name: '/login',
-          page: () => BlocProvider(
-            create: (context) => LoginCubit(),
-            child: const LoginView(),
+    // توفير HomeCubit بشكل عام لجميع المسارات
+    return BlocProvider(
+      create: (context) => HomeCubit(),
+      child: GetMaterialApp(
+        debugShowCheckedModeBanner: false,
+        initialRoute: '/login',
+        theme: ThemeData.light(),
+        darkTheme: ThemeData.dark(),
+        themeMode: ThemeManager().getTheme(),
+        getPages: [
+          GetPage(
+            name: '/login',
+            page: () => BlocProvider(
+              create: (context) => LoginCubit(),
+              child: const LoginView(),
+            ),
+            binding: BindingsBuilder(() {
+              Get.lazyPut(() => AuthController());
+            }),
           ),
-          binding: BindingsBuilder(() {
-            Get.lazyPut(() => AuthController());
-          }),
-        ),
-        GetPage(
-          name: '/profile',
-          page: () => const ProfileView(),
-          binding: BindingsBuilder(() {
-            Get.lazyPut(() => ProfileController());
-          }),
-        ),
-        GetPage(
-          name: '/register',
-          page: () => MultiBlocProvider(
-            providers: [
-              BlocProvider(create: (context) => RegisterCubit()),
-              BlocProvider(create: (context) => LoginCubit()),
-            ],
-            child: const RegisterView(),
+          GetPage(
+            name: '/profile',
+            page: () => const ProfileView(),
+            binding: BindingsBuilder(() {
+              Get.lazyPut(() => ProfileController());
+            }),
           ),
-          binding: BindingsBuilder(() {
-            Get.lazyPut(() => AuthController());
-          }),
-        ),
-        GetPage(
-          name: '/home',
-          page: () => MultiBlocProvider(
-            providers: [BlocProvider(create: (context) => HomeCubit())],
-            child: MyHomePage(), // HomeCubit متوفر لـ MyHomePage
+          GetPage(
+            name: '/register',
+            page: () => MultiBlocProvider(
+              providers: [
+                BlocProvider(create: (context) => RegisterCubit()),
+                BlocProvider(create: (context) => LoginCubit()),
+              ],
+              child: const RegisterView(),
+            ),
+            binding: BindingsBuilder(() {
+              Get.lazyPut(() => AuthController());
+            }),
           ),
-          //...
-        ),
-      ],
+          GetPage(
+            name: '/home',
+            // إزالة BlocProvider(HomeCubit) من هنا، لأنه تم توفيره في الأعلى
+            page: () => MyHomePage(),
+          ),
+          GetPage(
+            name: '/addProduct',
+            // لا نحتاج لـ BlocProvider هنا لأن HomeCubit متوفر عالميًا
+            page: () => const AddProductView(),
+          ),
+        ],
+      ),
     );
   }
 }

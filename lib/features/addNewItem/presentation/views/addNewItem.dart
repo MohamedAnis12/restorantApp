@@ -1,13 +1,33 @@
-import 'package:flutter/material.dart';
 
-class AddProductView extends StatefulWidget {
+import 'package:craxe/business_logic/addnewitem/add_new_item_cubit.dart';
+import 'package:craxe/business_logic/addnewitem/add_new_item_states.dart';
+import 'package:craxe/business_logic/home/Home_Cubit.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+
+class AddProductView extends StatelessWidget {
   const AddProductView({super.key});
 
   @override
-  State<AddProductView> createState() => _AddProductViewState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => AddProductCubit(),
+      child: const _AddProductViewBody(), // استخدام كلاس فرعي لجسم الشاشة
+    );
+  }
 }
 
-class _AddProductViewState extends State<AddProductView> {
+// الكلاس الأصلي أصبح الكلاس الفرعي (للتأكد من أن BlocConsumer لديه BuildContext صحيح)
+class _AddProductViewBody extends StatefulWidget {
+  const _AddProductViewBody();
+
+  @override
+  State<_AddProductViewBody> createState() => _AddProductViewState();
+}
+
+class _AddProductViewState extends State<_AddProductViewBody> {
   // 1. تعريف مفتاح الـ Form للتحقق من المدخلات
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -29,103 +49,122 @@ class _AddProductViewState extends State<AddProductView> {
     super.dispose();
   }
 
-  // دالة الإرسال (تجمع البيانات وترسلها)
+  // 💡 دالة الإرسال: تستدعي Cubit لإرسال البيانات
   void _submitForm() {
+    final cubit = context.read<AddProductCubit>(); // قراءة الكيوبت
+
     if (_formKey.currentState!.validate()) {
-      // تجميع البيانات في Map كما هو مطلوب في الـ Backend
-      final Map<String, dynamic> productData = {
-        "name": _nameController.text,
-        "description": _descController.text,
-        "price": double.tryParse(_priceController.text) ?? 0.0, // تحويل الرقم
-        "image": _imageController.text,
-        "category": _categoryController.text,
-      };
-
-      // هنا يمكنك استدعاء دالة الـ API الخاصة بك
-      print("Data ready to send: $productData");
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Processing Data... check console')),
+      // استدعاء دالة الكيوبت مع تحويل السعر إلى double
+      cubit.addProduct(
+        name: _nameController.text,
+        description: _descController.text,
+        price: double.tryParse(_priceController.text) ?? 0.0,
+        image: _imageController.text,
+        category: _categoryController.text,
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Add New Item")),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            children: [
-              // --- حقل الاسم ---
-              _buildTextField(
-                controller: _nameController,
-                label: "Name",
-                hint: "ex: Pasta",
-                icon: Icons.fastfood,
-              ),
-              const SizedBox(height: 16),
+    // 💡 2. إضافة BlocConsumer لمعالجة الحالات وعرض رسائل التنبيه
+    return BlocConsumer<AddProductCubit, AddProductStates>(
+      listener: (context, state) {
+        if (state is AddProductSuccessState) {
+          final homeCubit = context.read<HomeCubit>();
+          homeCubit.getMeals();
+          ScaffoldMessenger.of(context).showSnackBar(
 
-              // --- حقل الوصف ---
-              _buildTextField(
-                controller: _descController,
-                label: "Description",
-                hint: "ex: Pasta with red sauce",
-                icon: Icons.description,
-                maxLines: 3,
-              ),
-              const SizedBox(height: 16),
+            SnackBar(content: Text('Success: ${state.message}')),
+          );
+          Get.back();
+          // Get.back(); // العودة للشاشة السابقة بعد النجاح
+        } else if (state is AddProductErrorState) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Error: ${state.errorMessage}')),
+            
+          );
+        }
+      },
+      builder: (context, state) {
+        return Scaffold(
+          appBar: AppBar(title: const Text("Add New Item")),
+          body: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Form(
+              key: _formKey,
+              child: ListView(
+                children: [
+                  // --- حقول الإدخال (بدون تغيير) ---
+                  _buildTextField(
+                    controller: _nameController,
+                    label: "Name",
+                    hint: "ex: Pasta",
+                    icon: Icons.fastfood,
+                  ),
+                  const SizedBox(height: 16),
+                  _buildTextField(
+                    controller: _descController,
+                    label: "Description",
+                    hint: "ex: Pasta with red sauce",
+                    icon: Icons.description,
+                    maxLines: 3,
+                  ),
+                  const SizedBox(height: 16),
+                  _buildTextField(
+                    controller: _priceController,
+                    label: "Price",
+                    hint: "ex: 6.5",
+                    icon: Icons.attach_money,
+                    keyboardType: const TextInputType.numberWithOptions(
+                      decimal: true,
+                    ),
+                    isNumber: true,
+                  ),
+                  const SizedBox(height: 16),
+                  _buildTextField(
+                    controller: _imageController,
+                    label: "Image URL",
+                    hint: "http://example.com/image.png",
+                    icon: Icons.image,
+                  ),
+                  const SizedBox(height: 16),
+                  _buildTextField(
+                    controller: _categoryController,
+                    label: "Category",
+                    hint: "ex: Italian",
+                    icon: Icons.category,
+                  ),
+                  const SizedBox(height: 32),
 
-              // --- حقل السعر ---
-              _buildTextField(
-                controller: _priceController,
-                label: "Price",
-                hint: "ex: 6.5",
-                icon: Icons.attach_money,
-                keyboardType: const TextInputType.numberWithOptions(
-                  decimal: true,
-                ),
-                isNumber: true,
+                  // --- زر الإرسال ---
+                  ElevatedButton(
+                    // 💡 تعطيل الزر أثناء التحميل لمنع الإرسال المزدوج
+                    onPressed: state is AddProductLoadingState ? null : _submitForm,
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      backgroundColor: const Color(0xff5941ad),
+                    ),
+                    child: state is AddProductLoadingState
+                        ? const SizedBox(
+                            height: 24,
+                            width: 24,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 3,
+                            ),
+                          )
+                        : const Text(
+                            "Submit Item",
+                            style: TextStyle(fontSize: 18, color: Colors.white),
+                          ),
+                  ),
+                ],
               ),
-              const SizedBox(height: 16),
-
-              // --- حقل رابط الصورة ---
-              _buildTextField(
-                controller: _imageController,
-                label: "Image URL",
-                hint: "http://example.com/image.png",
-                icon: Icons.image,
-              ),
-              const SizedBox(height: 16),
-
-              // --- حقل التصنيف ---
-              _buildTextField(
-                controller: _categoryController,
-                label: "Category",
-                hint: "ex: Italian",
-                icon: Icons.category,
-              ),
-              const SizedBox(height: 32),
-
-              // --- زر الإرسال ---
-              ElevatedButton(
-                onPressed: _submitForm,
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  backgroundColor: Color(0xff5941ad),
-                ),
-                child: const Text(
-                  "Submit Item",
-                  style: TextStyle(fontSize: 18, color: Colors.white),
-                ),
-              ),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 

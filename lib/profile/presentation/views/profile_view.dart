@@ -1,3 +1,4 @@
+import 'package:craxe/features/addNewItem/presentation/views/addNewItem.dart';
 import 'package:craxe/features/auth/presentation/views/widgets/customButton.dart';
 import 'package:craxe/helper/theme_manager.dart';
 import 'package:craxe/profile/controllers/profile_controller.dart';
@@ -46,22 +47,30 @@ class ProfileView extends GetView<ProfileController> {
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: Column(
-          children: [
-            Gap(20),
-            const Column(children: [UserInfo(), Gap(10), AccountInfo()]),
-            Gap(30),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Column(
+            children: [
+              Gap(20),
+              const Column(children: [UserInfo(), Gap(10), AccountInfo()]),
+              Gap(30),
+              CusttomButton(onTap: () {
 
-            CusttomButton(
-              onTap: () async {
-                //! logout
-                Get.offNamed('/login');
-              },
-              text: 'Logout',
-            ),
-          ],
+                Get.to(AddProductView(),transition: Transition.cupertino,duration: Duration(milliseconds: 500));
+              }, text: "Add New item"),
+              Gap(30),
+
+              CusttomButton(
+                onTap: () async {
+                  //! logout
+                  Get.offNamed('/login');
+                },
+                text: 'Logout',
+              ),
+              Gap(30),
+            ],
+          ),
         ),
       ),
     );
