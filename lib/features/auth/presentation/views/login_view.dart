@@ -1,10 +1,14 @@
+import 'package:craxe/business_logic/login/login_cubit.dart';
+import 'package:craxe/business_logic/login/login_states.dart';
 import 'package:craxe/constants/assets.dart';
 import 'package:craxe/features/auth/controller/auth_controller.dart';
 import 'package:craxe/features/auth/helper/validator.dart';
 import 'package:craxe/features/auth/presentation/views/widgets/CustomPasswordFormField.dart';
 import 'package:craxe/features/auth/presentation/views/widgets/customButton.dart';
 import 'package:craxe/features/auth/presentation/views/widgets/custom_text_form_field.dart';
+import 'package:craxe/features/home/presentation/views/HomePage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 
 class LoginView extends GetView<AuthController> {
@@ -15,95 +19,104 @@ class LoginView extends GetView<AuthController> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios, size: 32),
-            onPressed: () {
-              Get.back(); // ترجع خطوة للوراء
-            },
-          ),
-        ),
-        body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: SingleChildScrollView(
-              child: Form(
-                key: controller.loginFormKey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    SizedBox(height: 20),
-                    Center(child: Image.asset(Assets.burgerlogo, height: 150)),
-
-                    SizedBox(height: 10),
-                    Center(
-                      child: Text(
-                        "Login",
-                        style: TextStyle(
-                          fontSize: 64,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-
-                    SizedBox(height: 60),
-
-                    /// Email
-                    CustomTextFormField(
-                      controller: controller.emailController,
-                      hintText: "ex:email@gmail.com",
-                      prefixIcon: Icons.email,
-                      validator: Validator.emailValidator(),
-                    ),
-
-                    SizedBox(height: 20),
-
-                    /// Password
-                    CustomPasswordFormField(
-                      controller: controller.passwordController,
-                      hintText: "ex:123456789",
-                      validator: Validator.loginPasswordValidator(),
-                    ),
-
-                    SizedBox(height: 30),
-
-                    /// Button
-                    CusttomButton(
-                      text: "Login",
-                      onTap: () {
-                        if (controller.loginFormKey.currentState!.validate()) {
-                          print("Email: ${controller.emailController.text}");
-                          print(
-                            "Password: ${controller.passwordController.text}",
-                          );
-                          Get.back();
-                        } else {
-                          custtomSnackBar();
-                        }
-                      },
-                    ),
-                    SizedBox(height: 40),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+        body: BlocConsumer<LoginCubit, LoginStates>(
+          listener: (context, state) {
+            if (state is LoginErrorState) {
+              custtomSnackBar();
+            } else if (state is LoginSuccessState) {
+              Get.to(MyHomePage());
+            }
+          },
+          builder: (context, state) {
+            return SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: SingleChildScrollView(
+                  child: Form(
+                    key: controller.loginFormKey,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        Text("I Don't have an account"),
-                        InkWell(
-                          onTap: () {
-                            Get.toNamed('/register');
-                          },
+                        SizedBox(height: 20),
+                        Center(
+                          child: Image.asset(Assets.burgerlogo, height: 150),
+                        ),
+
+                        SizedBox(height: 10),
+                        Center(
                           child: Text(
-                            "Creat one now!",
-                            style: TextStyle(color: Colors.blue),
+                            "Login",
+                            style: TextStyle(
+                              fontSize: 64,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
+                        ),
+
+                        SizedBox(height: 60),
+
+                        /// Email
+                        CustomTextFormField(
+                          controller: controller.emailController,
+                          hintText: "ex:email@gmail.com",
+                          prefixIcon: Icons.email,
+                          validator: Validator.emailValidator(),
+                        ),
+
+                        SizedBox(height: 20),
+
+                        /// Password
+                        CustomPasswordFormField(
+                          controller: controller.passwordController,
+                          hintText: "ex:123456789",
+                          validator: Validator.loginPasswordValidator(),
+                        ),
+
+                        SizedBox(height: 30),
+
+                        /// Button
+                        CusttomButton(
+                          text: "Login",
+                          onTap: () {
+                            if (controller.loginFormKey.currentState!
+                                .validate()) {
+                              // 1. استرجاع الكيوبت باستخدام context.read
+                              final loginCubit = context.read<LoginCubit>();
+
+                              // 2. استدعاء دالة تسجيل الدخول بالبيانات
+                              loginCubit.userLogin(
+                                email: controller.emailController.text,
+                                password: controller.passwordController.text,
+                              );
+                            } else {
+                              custtomSnackBar();
+                            }
+                          },
+                        ),
+                        SizedBox(height: 40),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Text("I Don't have an account"),
+                            InkWell(
+                              onTap: () {
+                                Get.toNamed('/register');
+                              },
+                              child: Text(
+                                "Creat one now!",
+                                style: TextStyle(color: Colors.blue),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                  ],
+                  ),
                 ),
               ),
-            ),
-          ),
+            );
+          },
         ),
       ),
     );

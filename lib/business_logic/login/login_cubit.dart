@@ -4,18 +4,17 @@ import 'package:craxe/data/models/login_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoginCubit extends Cubit<LoginStates> {
-  LoginCubit(super.initialState);
-
+LoginCubit() : super(LoginInitialState());
   void userLogin({required String email, required String password}) {
     emit(LoginLoadingState());
 
-    DioHelper.postData(url: 'url', data: {'email': email, 'password': password})
+    DioHelper.postData(url: 'users/login', data: {'email': email, 'password': password})
         .then((value) {
           LoginModel login = LoginModel.fromJson(value.data);
           emit(LoginSuccessState(loginModel: login));
         })
         .catchError((error) {
-          emit(LoginErrorState(errorMessage: error));
+          emit(LoginErrorState(errorMessage: error.toString()));
         });
   }
 }
