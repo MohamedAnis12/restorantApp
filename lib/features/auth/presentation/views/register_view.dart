@@ -2,9 +2,9 @@ import 'package:craxe/constants/assets.dart';
 import 'package:craxe/features/auth/controller/auth_controller.dart';
 import 'package:craxe/features/auth/helper/validator.dart';
 import 'package:craxe/features/auth/presentation/views/login_view.dart';
-import 'package:craxe/features/auth/presentation/widgets/CustomPasswordFormField.dart';
-import 'package:craxe/features/auth/presentation/widgets/customButton.dart';
-import 'package:craxe/features/auth/presentation/widgets/custom_text_form_field.dart';
+import 'package:craxe/features/auth/presentation/views/widgets/CustomPasswordFormField.dart';
+import 'package:craxe/features/auth/presentation/views/widgets/customButton.dart';
+import 'package:craxe/features/auth/presentation/views/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

@@ -1,4 +1,4 @@
-import 'package:craxe/features/addNewItem/presentation/views/widgets/CustomRateContainer.dart';
+import 'package:craxe/features/addNewItemToCart/presentation/views/widgets/CustomRateContainer.dart';
 import 'package:flutter/material.dart';
 
 class AddItemContainer extends StatelessWidget {

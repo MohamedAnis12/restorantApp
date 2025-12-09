@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       home: MyHomePage(),
-      theme: ThemeData.light(),
+      theme: ThemeData.dark(),
       getPages: [
         GetPage(
           name: '/login',

@@ -1,4 +1,4 @@
-import 'package:craxe/features/addNewItem/presentation/views/add_item_view.dart';
+import 'package:craxe/features/addNewItemToCart/presentation/views/add_item_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
