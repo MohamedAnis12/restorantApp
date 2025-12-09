@@ -22,7 +22,7 @@ class CustomItemCard extends StatelessWidget {
       // 💡 تغليفها بـ InkWell لجعل البطاقة كلها قابلة للنقر
       onTap: () {
         // يمكنك توجيه المستخدم لصفحة تفاصيل الوجبة أو إضافة العربة
-        Get.to(() => AddItemView(), transition: Transition.fadeIn);
+        Get.to(() => AddItemView(meal:meal), transition: Transition.fadeIn);
       },
       child: Container(
         height: 200,
@@ -89,7 +89,7 @@ class CustomItemCard extends StatelessWidget {
                         onTap: () {
                           // يمكنك تمرير الـ meal object هنا لصفحة AddItemView
                           Get.to(
-                            () => AddItemView(),
+                            () => AddItemView(meal: meal,),
                             transition: Transition.fadeIn,
                           );
                         },

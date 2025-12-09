@@ -17,7 +17,6 @@ class CustomGrid extends StatelessWidget {
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(), 
       
-      // 💡 1. استخدام عدد العناصر الفعلي في القائمة
       itemCount: meals.length, 
       
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -29,11 +28,7 @@ class CustomGrid extends StatelessWidget {
       itemBuilder: (context, index) {
         final meal = meals[index];
         
-        // 💡 2. تمرير بيانات الوجبة إلى CustomItemCard
         return CustomItemCard(
-          // يجب عليك إضافة حقول الـ Card لتستقبل بيانات الوجبة
-          // مثال: mealName: meal.name, mealPrice: meal.price, ...
-          // حاليًا، سنرسل الـ Model بالكامل إن أمكن:
           meal: meal, 
         );
       },

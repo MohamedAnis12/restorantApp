@@ -1,9 +1,10 @@
+import 'package:craxe/data/models/MealModel.dart';
 import 'package:craxe/features/addNewItemToCart/presentation/views/widgets/CustomRateContainer.dart';
 import 'package:flutter/material.dart';
 
 class AddItemContainer extends StatelessWidget {
-  const AddItemContainer({super.key});
-
+  const AddItemContainer({super.key, required this.meal});
+final MealModel meal;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -35,7 +36,7 @@ class AddItemContainer extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Beef Burger",
+                  meal.name.toString(),
                   style: TextStyle(fontSize: 24, color: Colors.white),
                 ),
                 Row(
@@ -63,7 +64,7 @@ class AddItemContainer extends StatelessWidget {
               ],
             ),
             Text(
-              "Original Beef Burger, barbecue grill or stir fry in a medium temperature pan, on both sides for 3-4 each, preferably cover the pan during cooking , can be served with toppings of your choice (mushroom, extra cheese, onion rings, tomatoes…)",
+              meal.description.toString(),
               style: TextStyle(color: Colors.grey),
             ),
             Container(
