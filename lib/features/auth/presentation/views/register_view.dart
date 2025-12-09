@@ -54,7 +54,7 @@ class RegisterView extends GetView<AuthController> {
                     CustomTextFormField(
                       controller: controller.signupNameController,
                       hintText: "ex: Amr Diab",
-                      prefixIcon: Icons.email,
+                      prefixIcon: Icons.person,
                       validator: Validator.emailValidator(),
                     ),
                     SizedBox(height: 15),
