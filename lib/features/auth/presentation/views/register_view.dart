@@ -1,6 +1,5 @@
 import 'package:craxe/business_logic/register/register_cubit.dart';
 import 'package:craxe/business_logic/register/register_states.dart';
-import 'package:craxe/business_logic/login/login_cubit.dart'; // نحتاجها لـ Login الفوري
 import 'package:craxe/constants/assets.dart';
 import 'package:craxe/features/auth/controller/auth_controller.dart';
 import 'package:craxe/features/auth/helper/validator.dart';

@@ -27,8 +27,8 @@ class ThemeManager {
   }
 
   void loadTheme() {
-    String savedTheme =
-        CasheHelper().getData(CasheKeys.theme) as String? ?? "system";
+  String savedTheme =
+    CasheHelper().getData(key: CasheKeys.theme) as String? ?? "system";
 
     currentTheme = ThemeModeState.values.firstWhere(
       (e) => e.name == savedTheme,

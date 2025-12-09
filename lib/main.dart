@@ -16,6 +16,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   DioHelper.init();
   await CasheHelper().init();
+  
   ThemeManager().loadTheme();
   runApp(const MyApp());
 }

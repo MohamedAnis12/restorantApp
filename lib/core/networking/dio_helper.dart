@@ -21,4 +21,6 @@ class DioHelper {
   }) async {
     return await dio.post(url, data: data, queryParameters: query);
   }
+
+  
 }

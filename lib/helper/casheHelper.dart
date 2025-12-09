@@ -25,8 +25,7 @@ class CasheHelper {
     }
   }
 
-  Object? getData(String key) => sharedPreferences.get(key);
-
-  Future<bool> removeData(String key) async =>
+  Object? getData({required String key}) => sharedPreferences.get(key);
+  Future<bool> removeData({required String key}) async =>
       await sharedPreferences.remove(key);
 }
