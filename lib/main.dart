@@ -1,3 +1,4 @@
+import 'package:craxe/core/networking/dio_helper.dart';
 import 'package:craxe/features/auth/controller/auth_controller.dart';
 import 'package:craxe/features/auth/presentation/views/login_view.dart';
 import 'package:craxe/features/auth/presentation/views/register_view.dart';
@@ -11,7 +12,7 @@ import 'package:get/get.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  DioHelper.init();
   await CasheHelper().init();
   ThemeManager().loadTheme();
   runApp(const MyApp());
