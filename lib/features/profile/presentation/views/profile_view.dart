@@ -1,9 +1,9 @@
 import 'package:craxe/features/addNewItem/presentation/views/addNewItem.dart';
 import 'package:craxe/features/auth/presentation/views/widgets/customButton.dart';
 import 'package:craxe/helper/theme_manager.dart';
-import 'package:craxe/profile/controllers/profile_controller.dart';
-import 'package:craxe/profile/presentation/widgets/account_info.dart';
-import 'package:craxe/profile/presentation/widgets/user_info.dart';
+import 'package:craxe/features/profile/controllers/profile_controller.dart';
+import 'package:craxe/features/profile/presentation/widgets/account_info.dart';
+import 'package:craxe/features/profile/presentation/widgets/user_info.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
