@@ -1,8 +1,8 @@
+import 'package:craxe/features/auth/presentation/widgets/customButton.dart';
 import 'package:craxe/helper/theme_manager.dart';
 import 'package:craxe/profile/controllers/profile_controller.dart';
 import 'package:craxe/profile/presentation/widgets/account_info.dart';
 import 'package:craxe/profile/presentation/widgets/user_info.dart';
-import 'package:craxe/widgets/app_button.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
@@ -54,15 +54,12 @@ class ProfileView extends GetView<ProfileController> {
             const Column(children: [UserInfo(), Gap(10), AccountInfo()]),
             Gap(30),
 
-            AppButton(
-              child: Text(
-                'Logout',
-                style: TextStyle(color: Colors.white, fontSize: 20),
-              ),
-              onPressed: () async {
+            CusttomButton(
+              onTap: () async {
                 //! logout
                 Get.offNamed('/login');
               },
+              text: 'Logout',
             ),
           ],
         ),

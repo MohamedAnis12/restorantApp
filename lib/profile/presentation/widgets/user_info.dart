@@ -22,7 +22,11 @@ class UserInfo extends GetView<ProfileController> {
                 backgroundColor: Color(0xff5941ad),
                 child: Text(
                   "YA",
-                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
               ),
               const Gap(10),
