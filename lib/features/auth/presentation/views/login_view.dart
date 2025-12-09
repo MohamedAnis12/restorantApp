@@ -24,7 +24,7 @@ class LoginView extends GetView<AuthController> {
             if (state is LoginErrorState) {
               custtomSnackBar();
             } else if (state is LoginSuccessState) {
-              Get.to(MyHomePage());
+              Get.offAllNamed('/home'); // أو المسار الصحيح لشاشة المنتجات;
             }
           },
           builder: (context, state) {

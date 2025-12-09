@@ -7,25 +7,47 @@ import 'package:craxe/profile/presentation/views/profile_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:craxe/business_logic/home/home_cubit.dart'; // تأكد من استيراد HomeCubit
 
 class MyHomePage extends StatelessWidget {
-  final List<Widget> pages = [HomeView(), CartView(), ProfileView()];
+  // 💡 Pages: لا تتطلب تغيير، لكن يجب أن تكون Widgets مستقرة
+  final List<Widget> pages = [
+    const HomeView(), 
+    const CartView(), 
+    const ProfileView()
+  ];
 
-  MyHomePage({super.key});
+  // 💡 Constructor: تهيئة ProfileController مرة واحدة عند بناء MyHomePage
+  MyHomePage({super.key}) {
+    // حل مشكلة ProfileController not found
+    Get.put(ProfileController()); 
+  }
 
   @override
   Widget build(BuildContext context) {
-    Get.put(ProfileController());
-    return BlocProvider(
-      create: (_) => NavbarCubit(),
+    
+    // 💡 استخدام MultiBlocProvider لتوفير NavbarCubit و HomeCubit
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => NavbarCubit()),
+        // توفير HomeCubit هنا يجعله متاحًا لـ HomeView كأحد الأطفال
+        BlocProvider(create: (_) => HomeCubit()), 
+      ],
+      
       child: BlocBuilder<NavbarCubit, NavbarState>(
         builder: (context, state) {
           return Scaffold(
-            body: pages[state.currentIndex], // الصفحة الحالية
+            // 💡 Body: IndexedStack يحافظ على حالة HomeView نشطة في الذاكرة
+            body: IndexedStack(
+              index: state.currentIndex,
+              children: pages,
+            ),
+            
             bottomNavigationBar: BottomNavigationBar(
               currentIndex: state.currentIndex,
+              // onTap: يجب أن يقرأ NavbarCubit فقط
               onTap: (index) => context.read<NavbarCubit>().changePage(index),
-              items: [
+              items: const [
                 BottomNavigationBarItem(
                   icon: Icon(Icons.home, size: 32),
                   label: '',

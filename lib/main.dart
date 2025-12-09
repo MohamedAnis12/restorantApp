@@ -1,9 +1,11 @@
+import 'package:craxe/business_logic/home/Home_Cubit.dart';
 import 'package:craxe/business_logic/login/login_cubit.dart';
 import 'package:craxe/business_logic/register/register_cubit.dart';
 import 'package:craxe/core/networking/dio_helper.dart';
 import 'package:craxe/features/auth/controller/auth_controller.dart';
 import 'package:craxe/features/auth/presentation/views/login_view.dart';
 import 'package:craxe/features/auth/presentation/views/register_view.dart';
+import 'package:craxe/features/home/presentation/views/HomePage.dart';
 import 'package:craxe/helper/casheHelper.dart';
 import 'package:craxe/helper/theme_manager.dart';
 import 'package:craxe/profile/controllers/profile_controller.dart';
@@ -16,20 +18,18 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   DioHelper.init();
   await CasheHelper().init();
-  
+
   ThemeManager().loadTheme();
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       initialRoute: '/login',
-
       theme: ThemeData.light(),
       darkTheme: ThemeData.dark(),
       themeMode: ThemeManager().getTheme(),
@@ -41,7 +41,6 @@ class MyApp extends StatelessWidget {
             child: const LoginView(),
           ),
           binding: BindingsBuilder(() {
-            // توفير AuthController هنا
             Get.lazyPut(() => AuthController());
           }),
         ),
@@ -54,21 +53,24 @@ class MyApp extends StatelessWidget {
         ),
         GetPage(
           name: '/register',
-          // 💡 استبدال BlocProvider المفرد بـ MultiBlocProvider لتوفير كلا الكيوبيت
           page: () => MultiBlocProvider(
             providers: [
               BlocProvider(create: (context) => RegisterCubit()),
-              BlocProvider(
-                create: (context) => LoginCubit(),
-              ), // توفير LoginCubit في الـ Widget Tree
+              BlocProvider(create: (context) => LoginCubit()),
             ],
             child: const RegisterView(),
           ),
           binding: BindingsBuilder(() {
-            // ⚠️ لا نحتاج لـ Get.lazyPut() لـ LoginCubit هنا
-            // فقط نحتاج AuthController
             Get.lazyPut(() => AuthController());
           }),
+        ),
+        GetPage(
+          name: '/home',
+          page: () => MultiBlocProvider(
+            providers: [BlocProvider(create: (context) => HomeCubit())],
+            child: MyHomePage(), // HomeCubit متوفر لـ MyHomePage
+          ),
+          //...
         ),
       ],
     );
