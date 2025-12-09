@@ -1,4 +1,5 @@
 import 'package:craxe/business_logic/login/login_cubit.dart';
+import 'package:craxe/business_logic/register/register_cubit.dart';
 import 'package:craxe/core/networking/dio_helper.dart';
 import 'package:craxe/features/auth/controller/auth_controller.dart';
 import 'package:craxe/features/auth/presentation/views/login_view.dart';
@@ -52,8 +53,19 @@ class MyApp extends StatelessWidget {
         ),
         GetPage(
           name: '/register',
-          page: () => const RegisterView(),
+          // 💡 استبدال BlocProvider المفرد بـ MultiBlocProvider لتوفير كلا الكيوبيت
+          page: () => MultiBlocProvider(
+            providers: [
+              BlocProvider(create: (context) => RegisterCubit()),
+              BlocProvider(
+                create: (context) => LoginCubit(),
+              ), // توفير LoginCubit في الـ Widget Tree
+            ],
+            child: const RegisterView(),
+          ),
           binding: BindingsBuilder(() {
+            // ⚠️ لا نحتاج لـ Get.lazyPut() لـ LoginCubit هنا
+            // فقط نحتاج AuthController
             Get.lazyPut(() => AuthController());
           }),
         ),
