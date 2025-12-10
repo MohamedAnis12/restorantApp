@@ -22,32 +22,35 @@ class HomeCubit extends Cubit<HomeStates> {
       await getMeals();
     } else if (catagory == 'Burger') {
       log('burrrrrrrrrr');
+      await getMeals();
 
-      viewedList.clear();
       final temp = viewedList.where((e) {
         return e.category == 'Burger';
       }).toList();
-
+      viewedList.clear();
       viewedList.addAll(temp);
       emit(HomeSuccessState());
     } else if (catagory == 'Pizza') {
       log('pizzaa');
 
-      viewedList.clear();
+      await getMeals();
+
       final temp = viewedList.where((e) {
+        log(e.category!);
         return e.category == 'Pizza';
       }).toList();
-
+      viewedList.clear();
       viewedList.addAll(temp);
       emit(HomeSuccessState());
     } else if (catagory == 'Dessert') {
       log('desssssssssssss');
 
-      viewedList.clear();
+      await getMeals();
+
       final temp = viewedList.where((e) {
         return e.category == 'Dessert';
       }).toList();
-
+      viewedList.clear();
       viewedList.addAll(temp);
       emit(HomeSuccessState());
     }
