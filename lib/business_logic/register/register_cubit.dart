@@ -7,14 +7,14 @@ import 'package:dio/dio.dart'; // تأكد من استيراد DioException
 class RegisterCubit extends Cubit<RegisterStates> {
   RegisterCubit() : super(RegisterInitialState());
 
-  void userRegister({
+  Future<void> userRegister({
     required String name, 
     required String email,
     required String password,
     required String gender,
     required String image,
     required String phonenumber,
-  }) async {
+  })  async {
     // 💡 يجب إضافة async هنا
     emit(RegisterLoadingState());
     print('--- OUTGOING PAYLOAD DEBUG ---');

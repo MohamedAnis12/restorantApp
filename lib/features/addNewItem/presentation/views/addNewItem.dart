@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:craxe/business_logic/addnewitem/add_new_item_cubit.dart';
 import 'package:craxe/business_logic/addnewitem/add_new_item_states.dart';
@@ -51,18 +50,22 @@ class _AddProductViewState extends State<_AddProductViewBody> {
   }
 
   // 💡 دالة الإرسال: تستدعي Cubit لإرسال البيانات
-  void _submitForm() {
+  Future<void> _submitForm() async {
     final cubit = context.read<AddProductCubit>(); // قراءة الكيوبت
 
     if (_formKey.currentState!.validate()) {
       // استدعاء دالة الكيوبت مع تحويل السعر إلى double
-      cubit.addProduct(
+      await cubit.addProduct(
         name: _nameController.text,
         description: _descController.text,
         price: double.tryParse(_priceController.text) ?? 0.0,
         image: _imageController.text,
         category: _categoryController.text,
       );
+      final homeCubit = context.read<HomeCubit>();
+
+      // استدعاء دالة جلب الوجبات لتحديث شاشة Home
+      await homeCubit.getMeals();
     }
   }
 
@@ -70,14 +73,10 @@ class _AddProductViewState extends State<_AddProductViewBody> {
   Widget build(BuildContext context) {
     // 💡 2. إضافة BlocConsumer لمعالجة الحالات وعرض رسائل التنبيه
     return BlocConsumer<AddProductCubit, AddProductStates>(
-      listener: (context, state) {
+      listener: (context, state) async {
         if (state is AddProductSuccessState) {
           // قراءة HomeCubit
-          final homeCubit = context.read<HomeCubit>();
 
-          // استدعاء دالة جلب الوجبات لتحديث شاشة Home
-          homeCubit.getMeals();
-          log("---------------------------------------");
           ScaffoldMessenger.of(
             context,
           ).showSnackBar(SnackBar(content: Text('Success: ${state.message}')));

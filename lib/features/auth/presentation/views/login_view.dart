@@ -6,7 +6,6 @@ import 'package:craxe/features/auth/helper/validator.dart';
 import 'package:craxe/features/auth/presentation/views/widgets/CustomPasswordFormField.dart';
 import 'package:craxe/features/auth/presentation/views/widgets/customButton.dart';
 import 'package:craxe/features/auth/presentation/views/widgets/custom_text_form_field.dart';
-import 'package:craxe/features/home/presentation/views/HomePage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
@@ -78,14 +77,14 @@ class LoginView extends GetView<AuthController> {
                         /// Button
                         CusttomButton(
                           text: "Login",
-                          onTap: () {
+                          onTap: () async {
                             if (controller.loginFormKey.currentState!
                                 .validate()) {
                               // 1. استرجاع الكيوبت باستخدام context.read
                               final loginCubit = context.read<LoginCubit>();
 
                               // 2. استدعاء دالة تسجيل الدخول بالبيانات
-                              loginCubit.userLogin(
+                              await loginCubit.userLogin(
                                 email: controller.emailController.text,
                                 password: controller.passwordController.text,
                               );

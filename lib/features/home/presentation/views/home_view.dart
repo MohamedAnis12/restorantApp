@@ -1,4 +1,6 @@
-import 'package:craxe/business_logic/home/home_cubit.dart';
+import 'dart:developer';
+
+import 'package:craxe/business_logic/home/Home_Cubit.dart';
 import 'package:craxe/business_logic/home/home_states.dart';
 import 'package:craxe/features/home/presentation/views/widgets/custom_categories.dart';
 import 'package:craxe/features/home/presentation/views/widgets/custom_grid.dart';
@@ -46,7 +48,6 @@ class _HomeViewState extends State<HomeView> {
                 ],
               ),
               const SizedBox(height: 10), // فاصل صغير
-
               // 💡 3. استخدام BlocBuilder لمعالجة حالات جلب البيانات
               BlocBuilder<HomeCubit, HomeStates>(
                 builder: (context, state) {
@@ -64,13 +65,12 @@ class _HomeViewState extends State<HomeView> {
                     if (meals == null || meals.isEmpty) {
                       return const Center(child: Text("No products found."));
                     }
-                    
+                    log("rebuild...........");
                     // 💡 تمرير قائمة الوجبات الفعلية إلى CustomGrid
-                    return CustomGrid(meals: meals); 
-
+                    return CustomGrid(meals: meals);
                   }
                   // حالة Initial أو أي حالة أخرى
-                  return const SizedBox.shrink(); 
+                  return const SizedBox.shrink();
                 },
               ),
             ],
