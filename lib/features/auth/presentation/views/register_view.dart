@@ -118,14 +118,14 @@ class RegisterView extends GetView<AuthController> {
                               : 'Register',
                           onTap: (state is RegisterLoadingState)
                               ? null
-                              : () {
+                              : () async {
                                   // تعطيل الزر أثناء التحميل
 
                                   // 💡 3. تنفيذ اللوجيك
                                   if (controller.registerFormKey.currentState!
                                       .validate()) {
                                     // 💡 تم تصحيح الـ Key
-                                    context.read<RegisterCubit>().userRegister(
+                                await    context.read<RegisterCubit>().userRegister(
                                       name:
                                           controller.signupNameController.text,
                                       email:

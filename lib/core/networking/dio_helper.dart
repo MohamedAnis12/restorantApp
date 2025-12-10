@@ -60,7 +60,6 @@ class DioHelper {
     print('--- SENDING GET REQUEST ---');
     print('URL: ${url}');
     print('Auth Header: ${headers['Authorization']}');
-    print('---------------------------');
 
     return await dio.get(
       url,

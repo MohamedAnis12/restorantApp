@@ -14,7 +14,7 @@ class RegisterCubit extends Cubit<RegisterStates> {
     required String gender,
     required String image,
     required String phonenumber,
-  }) async {
+  })  async {
     // 💡 يجب إضافة async هنا
     emit(RegisterLoadingState());
     print('--- OUTGOING PAYLOAD DEBUG ---');
