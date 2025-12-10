@@ -1,53 +1,113 @@
+import 'dart:developer';
+
 import 'package:craxe/business_logic/home/home_states.dart';
 import 'package:craxe/core/networking/dio_helper.dart';
+import 'package:craxe/data/models/MealModel.dart';
 import 'package:craxe/data/models/MealsResponseModel.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dio/dio.dart'; // نحتاجها للتعامل مع DioException
 
 class HomeCubit extends Cubit<HomeStates> {
   HomeCubit() : super(HomeInitialState());
+  final List<MealModel> viewedList = [];
+  // title: 'All', image: "assets/images/allFoodes.png"),
+  //             CategoryItem(title: 'Burger', image: "assets/images/Burger.png"),
+  //             CategoryItem(title: 'Pizza'
+
+  Future<void> filterFunc(String catagory) async {
+    log('in');
+    if (catagory == 'All') {
+      log('alln');
+
+      await getMeals();
+    } else if (catagory == 'Burger') {
+      log('burrrrrrrrrr');
+      await getMeals();
+
+      final temp = viewedList.where((e) {
+        return e.category == 'Burger';
+      }).toList();
+      viewedList.clear();
+      viewedList.addAll(temp);
+      emit(HomeSuccessState());
+    } else if (catagory == 'Pizza') {
+      log('pizzaa');
+
+      await getMeals();
+
+      final temp = viewedList.where((e) {
+        log(e.category!);
+        return e.category == 'Pizza';
+      }).toList();
+      viewedList.clear();
+      viewedList.addAll(temp);
+      emit(HomeSuccessState());
+    } else if (catagory == 'Dessert') {
+      log('desssssssssssss');
+
+      await getMeals();
+
+      final temp = viewedList.where((e) {
+        return e.category == 'Dessert';
+      }).toList();
+      viewedList.clear();
+      viewedList.addAll(temp);
+      emit(HomeSuccessState());
+    }
+  }
 
   Future<void> getMeals() async {
-    if (!isClosed) { // 💡 تحقق: تأمين emit(Loading)
+    log('tttttttttttttttttttttttttttttttttttttt');
+    if (!isClosed) {
+      // 💡 تحقق: تأمين emit(Loading)
       emit(HomeLoadingState());
     }
+    if (!isClosed) {
+      try {
+        final response = await DioHelper.getData(
+          url: 'meals/get-all-meals', // افترضنا هذا المسار
+        );
+        log("get Mealllllllllllllllll");
+        MealsResponseModel mealsData = MealsResponseModel.fromJson(
+          response.data,
+        );
+        viewedList.clear();
+        viewedList.addAll(mealsData.meals ?? []);
 
-    try {
-      final response = await DioHelper.getData(
-        url: 'meals/get-all-meals', // افترضنا هذا المسار
-      );
-
-      MealsResponseModel mealsData = MealsResponseModel.fromJson(response.data);
-
-      if (!isClosed) { 
-        emit(HomeSuccessState(mealsResponseModel: mealsData));
+        emit(HomeSuccessState());
         print('DEBUG: HomeSuccessState EMITTED successfully.');
-      }
+      } on DioException catch (e) {
+        String errorMessage;
+        final responseData = e.response?.data;
 
-    } on DioException catch (e) {
-      String errorMessage;
-      final responseData = e.response?.data;
+        if (responseData is Map<String, dynamic> &&
+            responseData.containsKey('message')) {
+          errorMessage = responseData['message'] as String;
+        } else {
+          errorMessage =
+              e.message ?? 'Failed to fetch meals due to unknown error.';
+        }
 
-      if (responseData is Map<String, dynamic> && responseData.containsKey('message')) {
-        errorMessage = responseData['message'] as String;
-      } else {
-        errorMessage = e.message ?? 'Failed to fetch meals due to unknown error.';
-      }
+        if (!isClosed) {
+          // 💡 تحقق: تأمين emit(Error)
+          emit(HomeErrorState(errorMessage: errorMessage));
+        }
 
-      if (!isClosed) { // 💡 تحقق: تأمين emit(Error)
-        emit(HomeErrorState(errorMessage: errorMessage));
-      }
-      
-      // طباعة الرد الخطأ للمساعدة في Debugging
-      print('--- MEALS FETCH ERROR ---');
-      print('Status: ${e.response?.statusCode}');
-      print('Data: ${e.response?.data}');
-      print('-------------------------');
-
-    } catch (e) {
-      // معالجة أخطاء التحليل (Parsing) غير المتوقعة
-      if (!isClosed) { // 💡 تحقق: تأمين emit(Unexpected Error)
-        emit(HomeErrorState(errorMessage: 'An unexpected error occurred: ${e.toString()}'));
+        // طباعة الرد الخطأ للمساعدة في Debugging
+        print('--- MEALS FETCH ERROR ---');
+        print('Status: ${e.response?.statusCode}');
+        print('Data: ${e.response?.data}');
+        print('-------------------------');
+      } catch (e) {
+        // معالجة أخطاء التحليل (Parsing) غير المتوقعة
+        if (!isClosed) {
+          // 💡 تحقق: تأمين emit(Unexpected Error)
+          emit(
+            HomeErrorState(
+              errorMessage: 'An unexpected error occurred: ${e.toString()}',
+            ),
+          );
+        }
       }
     }
   }

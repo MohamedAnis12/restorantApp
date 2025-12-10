@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:craxe/business_logic/addnewitem/add_new_item_cubit.dart';
 import 'package:craxe/business_logic/addnewitem/add_new_item_states.dart';
 import 'package:craxe/business_logic/home/Home_Cubit.dart';
@@ -37,7 +35,6 @@ class _AddProductViewState extends State<_AddProductViewBody> {
   final TextEditingController _descController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _imageController = TextEditingController();
-  final TextEditingController _categoryController = TextEditingController();
 
   // تنظيف الذاكرة عند إغلاق الصفحة
   @override
@@ -46,23 +43,31 @@ class _AddProductViewState extends State<_AddProductViewBody> {
     _descController.dispose();
     _priceController.dispose();
     _imageController.dispose();
-    _categoryController.dispose();
     super.dispose();
   }
 
   // 💡 دالة الإرسال: تستدعي Cubit لإرسال البيانات
-  void _submitForm() {
+  Future<void> _submitForm(String? catagory) async {
     final cubit = context.read<AddProductCubit>(); // قراءة الكيوبت
 
     if (_formKey.currentState!.validate()) {
-      // استدعاء دالة الكيوبت مع تحويل السعر إلى double
-      cubit.addProduct(
-        name: _nameController.text,
-        description: _descController.text,
-        price: double.tryParse(_priceController.text) ?? 0.0,
-        image: _imageController.text,
-        category: _categoryController.text,
-      );
+      if (catagory != null) {
+        await cubit.addProduct(
+          name: _nameController.text,
+          description: _descController.text,
+          price: double.tryParse(_priceController.text) ?? 0.0,
+          image: _imageController.text,
+          category: catagory,
+        );
+        final homeCubit = context.read<HomeCubit>();
+
+        // استدعاء دالة جلب الوجبات لتحديث شاشة Home
+        await homeCubit.getMeals();
+      } else {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('catagory is required')));
+      }
     }
   }
 
@@ -70,14 +75,10 @@ class _AddProductViewState extends State<_AddProductViewBody> {
   Widget build(BuildContext context) {
     // 💡 2. إضافة BlocConsumer لمعالجة الحالات وعرض رسائل التنبيه
     return BlocConsumer<AddProductCubit, AddProductStates>(
-      listener: (context, state) {
+      listener: (context, state) async {
         if (state is AddProductSuccessState) {
           // قراءة HomeCubit
-          final homeCubit = context.read<HomeCubit>();
 
-          // استدعاء دالة جلب الوجبات لتحديث شاشة Home
-          homeCubit.getMeals();
-          log("---------------------------------------");
           ScaffoldMessenger.of(
             context,
           ).showSnackBar(SnackBar(content: Text('Success: ${state.message}')));
@@ -92,6 +93,8 @@ class _AddProductViewState extends State<_AddProductViewBody> {
         }
       },
       builder: (context, state) {
+        String? catagory;
+
         return Scaffold(
           appBar: AppBar(title: const Text("Add New Item")),
           body: Padding(
@@ -134,11 +137,23 @@ class _AddProductViewState extends State<_AddProductViewBody> {
                     icon: Icons.image,
                   ),
                   const SizedBox(height: 16),
-                  _buildTextField(
-                    controller: _categoryController,
-                    label: "Category",
-                    hint: "ex: Italian",
-                    icon: Icons.category,
+                  DropdownMenu(
+                    width: double.infinity,
+                    hintText: 'Catagory',
+                    onSelected: (value) {
+                      catagory = value!;
+                    },
+                    dropdownMenuEntries: [
+                      DropdownMenuEntry<String>(
+                        label: 'Burger',
+                        value: 'Burger',
+                      ),
+                      DropdownMenuEntry<String>(label: 'Pizza', value: 'Pizza'),
+                      DropdownMenuEntry<String>(
+                        label: 'Dessert',
+                        value: 'Dessert',
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 32),
 
@@ -147,7 +162,7 @@ class _AddProductViewState extends State<_AddProductViewBody> {
                     // 💡 تعطيل الزر أثناء التحميل لمنع الإرسال المزدوج
                     onPressed: state is AddProductLoadingState
                         ? null
-                        : _submitForm,
+                        : () => _submitForm(catagory),
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       backgroundColor: const Color(0xff5941ad),
