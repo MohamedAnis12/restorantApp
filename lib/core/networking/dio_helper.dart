@@ -68,4 +68,30 @@ class DioHelper {
       options: Options(headers: headers),
     );
   }
+  // في ملف dio_helper.dart
+
+  static Future<Response> deleteData({
+    required String url,
+    required Map<String, dynamic> data, // لإرسال الـ ID في الـ Body
+  }) async {
+    String? token = CasheHelper().getData(key: 'TOKEN') as String?;
+
+    final response = await dio.delete(
+      url,
+      data: data,
+      options: Options(
+        headers: {
+          'Authorization': token != null ? 'Bearer $token' : null,
+          'Content-Type': 'application/json',
+        },
+      ),
+    );
+
+    print('--- DELETE REQUEST RAW RESPONSE ---');
+    print('Status: ${response.statusCode}');
+    print('Data: ${response.data}');
+    print('-----------------------------------');
+
+    return response;
+  }
 }

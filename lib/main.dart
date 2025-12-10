@@ -14,7 +14,7 @@ import 'package:craxe/features/profile/presentation/views/profile_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
-
+import 'package:craxe/business_logic/cart/cart_cubit.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   DioHelper.init();
@@ -29,9 +29,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // توفير HomeCubit بشكل عام لجميع المسارات
-    return BlocProvider(
-      create: (context) => HomeCubit(),
+    // 💡 استخدام MultiBlocProvider لتوفير HomeCubit و CartCubit بشكل عام
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => HomeCubit()),
+        BlocProvider(create: (context) => CartCubit()), // 💡 توفير CartCubit هنا
+      ],
       child: GetMaterialApp(
         debugShowCheckedModeBanner: false,
         initialRoute: '/login',
@@ -71,12 +74,11 @@ class MyApp extends StatelessWidget {
           ),
           GetPage(
             name: '/home',
-            // إزالة BlocProvider(HomeCubit) من هنا، لأنه تم توفيره في الأعلى
+            // HomeCubit و CartCubit متاحان الآن من MultiBlocProvider الخارجي
             page: () => MyHomePage(),
           ),
           GetPage(
             name: '/addProduct',
-            // لا نحتاج لـ BlocProvider هنا لأن HomeCubit متوفر عالميًا
             page: () => const AddProductView(),
           ),
         ],
