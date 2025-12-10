@@ -55,7 +55,7 @@ class ProfileView extends GetView<ProfileController> {
               Gap(20),
               const Column(children: [UserInfo(), Gap(10), AccountInfo()]),
               Gap(30),
-              CusttomButton(onTap: () {
+                 CusttomButton(onTap: () {
 
                 Get.to(AddProductView(),transition: Transition.cupertino,duration: Duration(milliseconds: 500));
               }, text: "Add New item"),

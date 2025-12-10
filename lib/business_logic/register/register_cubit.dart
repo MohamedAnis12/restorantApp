@@ -7,7 +7,7 @@ import 'package:dio/dio.dart'; // تأكد من استيراد DioException
 class RegisterCubit extends Cubit<RegisterStates> {
   RegisterCubit() : super(RegisterInitialState());
 
-  void userRegister({
+  Future<void> userRegister({
     required String name, 
     required String email,
     required String password,

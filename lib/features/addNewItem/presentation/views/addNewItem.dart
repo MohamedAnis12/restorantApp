@@ -1,12 +1,10 @@
 import 'dart:developer';
-
 import 'package:craxe/business_logic/addnewitem/add_new_item_cubit.dart';
 import 'package:craxe/business_logic/addnewitem/add_new_item_states.dart';
 import 'package:craxe/business_logic/home/Home_Cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 
 class AddProductView extends StatelessWidget {
   const AddProductView({super.key});
