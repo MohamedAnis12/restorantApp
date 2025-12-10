@@ -74,25 +74,37 @@ class LoginView extends GetView<AuthController> {
 
                         SizedBox(height: 30),
 
-                        /// Button
-                        CusttomButton(
-                          text: "Login",
-                          onTap: () async {
-                            if (controller.loginFormKey.currentState!
-                                .validate()) {
-                              // 1. استرجاع الكيوبت باستخدام context.read
-                              final loginCubit = context.read<LoginCubit>();
+                        state is LoginLoadingState
+                            ? Container(
+                                height: 60,
+                                decoration: BoxDecoration(
+                                  color: Color(0xff7344d0),
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                child: Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              )
+                            : CusttomButton(
+                                text: "Login",
+                                onTap: () async {
+                                  if (controller.loginFormKey.currentState!
+                                      .validate()) {
+                                    // 1. استرجاع الكيوبت باستخدام context.read
+                                    final loginCubit = context
+                                        .read<LoginCubit>();
 
-                              // 2. استدعاء دالة تسجيل الدخول بالبيانات
-                              await loginCubit.userLogin(
-                                email: controller.emailController.text,
-                                password: controller.passwordController.text,
-                              );
-                            } else {
-                              custtomSnackBar();
-                            }
-                          },
-                        ),
+                                    // 2. استدعاء دالة تسجيل الدخول بالبيانات
+                                    await loginCubit.userLogin(
+                                      email: controller.emailController.text,
+                                      password:
+                                          controller.passwordController.text,
+                                    );
+                                  } else {
+                                    custtomSnackBar();
+                                  }
+                                },
+                              ),
                         SizedBox(height: 40),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
