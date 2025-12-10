@@ -1,9 +1,12 @@
 import 'package:craxe/business_logic/addtocart/add_to_cart_cubit.dart';
 import 'package:craxe/business_logic/addtocart/add_to_cart_states.dart';
+import 'package:craxe/business_logic/cart/cart_cubit.dart';
 import 'package:craxe/data/models/MealModel.dart';
 import 'package:craxe/features/addNewItemToCart/presentation/views/widgets/CustomRateContainer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 class AddItemContainer extends StatelessWidget {
   const AddItemContainer({super.key, required this.meal});
@@ -46,7 +49,6 @@ class _AddItemContainerBodyState extends State<_AddItemContainerBody> {
 
   void addToCart() {
     final cubit = context.read<AddToCartCubit>();
-    // 💡 يفترض أن الـ mealId موجود في meal.id أو ما شابه
     final mealId = int.tryParse(widget.meal.id?.toString() ?? '0') ?? 0;
 
     if (mealId > 0) {
@@ -57,16 +59,19 @@ class _AddItemContainerBodyState extends State<_AddItemContainerBody> {
       );
     }
   }
-
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AddToCartCubit, AddToCartStates>(
       listener: (context, state) {
         if (state is AddToCartSuccess) {
+          final cartCubit = context.read<CartCubit>();
+
+          cartCubit.fetchCart();
+
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Item added to cart successfully!')),
           );
-          // يمكنك إغلاق الشاشة هنا إذا أردت Get.back()
+          Get.back();
         } else if (state is AddToCartError) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Failed: ${state.errorMessage}')),
