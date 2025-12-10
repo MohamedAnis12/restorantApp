@@ -60,9 +60,9 @@ class _HomeViewState extends State<HomeView> {
                   } else if (state is HomeSuccessState) {
                     // حالة النجاح: عرض المنتجات
                     // التأكد من أن القائمة ليست فارغة قبل تمريرها
-                    final meals = state.mealsResponseModel.meals;
+                    final meals = context.read<HomeCubit>().viewedList;
 
-                    if (meals == null || meals.isEmpty) {
+                    if (meals.isEmpty) {
                       return const Center(child: Text("No products found."));
                     }
                     log("rebuild...........");

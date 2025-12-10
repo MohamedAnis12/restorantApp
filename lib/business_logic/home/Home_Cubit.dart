@@ -2,12 +2,56 @@ import 'dart:developer';
 
 import 'package:craxe/business_logic/home/home_states.dart';
 import 'package:craxe/core/networking/dio_helper.dart';
+import 'package:craxe/data/models/MealModel.dart';
 import 'package:craxe/data/models/MealsResponseModel.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dio/dio.dart'; // نحتاجها للتعامل مع DioException
 
 class HomeCubit extends Cubit<HomeStates> {
   HomeCubit() : super(HomeInitialState());
+  final List<MealModel> viewedList = [];
+  // title: 'All', image: "assets/images/allFoodes.png"),
+  //             CategoryItem(title: 'Burger', image: "assets/images/Burger.png"),
+  //             CategoryItem(title: 'Pizza'
+
+  Future<void> filterFunc(String catagory) async {
+    log('in');
+    if (catagory == 'All') {
+      log('alln');
+
+      await getMeals();
+    } else if (catagory == 'Burger') {
+      log('burrrrrrrrrr');
+
+      viewedList.clear();
+      final temp = viewedList.where((e) {
+        return e.category == 'Burger';
+      }).toList();
+
+      viewedList.addAll(temp);
+      emit(HomeSuccessState());
+    } else if (catagory == 'Pizza') {
+      log('pizzaa');
+
+      viewedList.clear();
+      final temp = viewedList.where((e) {
+        return e.category == 'Pizza';
+      }).toList();
+
+      viewedList.addAll(temp);
+      emit(HomeSuccessState());
+    } else if (catagory == 'Dessert') {
+      log('desssssssssssss');
+
+      viewedList.clear();
+      final temp = viewedList.where((e) {
+        return e.category == 'Dessert';
+      }).toList();
+
+      viewedList.addAll(temp);
+      emit(HomeSuccessState());
+    }
+  }
 
   Future<void> getMeals() async {
     log('tttttttttttttttttttttttttttttttttttttt');
@@ -24,8 +68,10 @@ class HomeCubit extends Cubit<HomeStates> {
         MealsResponseModel mealsData = MealsResponseModel.fromJson(
           response.data,
         );
+        viewedList.clear();
+        viewedList.addAll(mealsData.meals ?? []);
 
-        emit(HomeSuccessState(mealsResponseModel: mealsData));
+        emit(HomeSuccessState());
         print('DEBUG: HomeSuccessState EMITTED successfully.');
       } on DioException catch (e) {
         String errorMessage;
