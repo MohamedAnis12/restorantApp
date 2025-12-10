@@ -1,3 +1,4 @@
+import 'dart:developer';
 
 import 'package:craxe/business_logic/addnewitem/add_new_item_cubit.dart';
 import 'package:craxe/business_logic/addnewitem/add_new_item_states.dart';
@@ -71,18 +72,22 @@ class _AddProductViewState extends State<_AddProductViewBody> {
     return BlocConsumer<AddProductCubit, AddProductStates>(
       listener: (context, state) {
         if (state is AddProductSuccessState) {
+          // قراءة HomeCubit
           final homeCubit = context.read<HomeCubit>();
-          homeCubit.getMeals();
-          ScaffoldMessenger.of(context).showSnackBar(
 
-            SnackBar(content: Text('Success: ${state.message}')),
-          );
+          // استدعاء دالة جلب الوجبات لتحديث شاشة Home
+          homeCubit.getMeals();
+          log("---------------------------------------");
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text('Success: ${state.message}')));
+
+          // العودة للشاشة السابقة (شاشة Home)
           Get.back();
           // Get.back(); // العودة للشاشة السابقة بعد النجاح
         } else if (state is AddProductErrorState) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Error: ${state.errorMessage}')),
-            
           );
         }
       },
@@ -140,7 +145,9 @@ class _AddProductViewState extends State<_AddProductViewBody> {
                   // --- زر الإرسال ---
                   ElevatedButton(
                     // 💡 تعطيل الزر أثناء التحميل لمنع الإرسال المزدوج
-                    onPressed: state is AddProductLoadingState ? null : _submitForm,
+                    onPressed: state is AddProductLoadingState
+                        ? null
+                        : _submitForm,
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       backgroundColor: const Color(0xff5941ad),

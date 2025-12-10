@@ -13,23 +13,21 @@ class HomeCubit extends Cubit<HomeStates> {
     }
 
     try {
-      // ⚠️ ملاحظة: لا يزال مسار 'meals/all-meals' يُرجِع خطأ 404. تأكد من تعديله.
       final response = await DioHelper.getData(
         url: 'meals/get-all-meals', // افترضنا هذا المسار
       );
 
-      // 💡 تحليل الرد الناجح
       MealsResponseModel mealsData = MealsResponseModel.fromJson(response.data);
 
-      if (!isClosed) { // 💡 تحقق: تأمين emit(Success)
+      if (!isClosed) { 
         emit(HomeSuccessState(mealsResponseModel: mealsData));
+        print('DEBUG: HomeSuccessState EMITTED successfully.');
       }
 
     } on DioException catch (e) {
       String errorMessage;
       final responseData = e.response?.data;
 
-      // الحل: التحقق الآمن مما إذا كان الرد هو Map ويحتوي على مفتاح 'message'
       if (responseData is Map<String, dynamic> && responseData.containsKey('message')) {
         errorMessage = responseData['message'] as String;
       } else {
