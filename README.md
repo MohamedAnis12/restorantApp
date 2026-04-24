@@ -52,4 +52,4 @@ A modern, high-performance food delivery mobile application built with **Flutter
 
 1. **Clone the repository:**
    ```bash
-   git clone [https://github.com/yourusername/foodie-express.git](https://github.com/yourusername/foodie-express.git)
+   git clone [https://github.com/MohamedAnis12/restorantApp]
