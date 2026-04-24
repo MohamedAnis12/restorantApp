@@ -11,6 +11,8 @@ class DioHelper {
         baseUrl: 'https://fci-se-project.vercel.app/',
         receiveDataWhenStatusError: true,
         headers: {'Content-Type': 'application/json'},
+        connectTimeout: const Duration(seconds: 10),
+        receiveTimeout: const Duration(seconds: 10),
       ),
     );
   }
