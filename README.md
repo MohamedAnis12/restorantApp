@@ -22,13 +22,12 @@ A modern, high-performance food delivery mobile application built with **Flutter
 
 | Login Screen | Main Menu (Light) | Item Details |
 | :---: | :---: | :---: |
-| <img src="screenshots/login.jpg" width="200"> | <img src="screenshots/menu_light.jpg" width="200"> | <img src="screenshots/details.jpg" width="200"> |
+| <img src="screenshots/Login_light.jpeg" width="200"> | <img src="screenshots/minu_light.jpeg" width="200"> | <img src="screenshots/add.jpeg" width="200"> |
 
 | Dark Mode Menu | Shopping Cart | Profile Page |
 | :---: | :---: | :---: |
-| <img src="screenshots/menu_dark.jpg" width="200"> | <img src="screenshots/cart.jpg" width="200"> | <img src="screenshots/profile.jpg" width="200"> |
+| <img src="screenshots/minu_dark.jpeg" width="200"> | <img src="screenshots/check_out_dark.jpeg" width="200"> | <img src="screenshots/profile_Dark.jpeg" width="200"> |
 
-> **Note:** To see these images, create a folder named `screenshots` in your repo and upload your app images there with the names used above.
 
 ---
 
