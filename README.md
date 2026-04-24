@@ -50,6 +50,10 @@ A modern, high-performance food delivery mobile application built with **Flutter
 
 ### Installation
 
-1. **Clone the repository:**
-   ```bash
-   git clone [https://github.com/MohamedAnis12/restorantApp]
+## 🚀 Installation & Setup
+
+```bash
+git clone [https://github.com/MohamedAnis12/restorantApp.git](https://github.com/MohamedAnis12/restorantApp.git)
+cd restorantApp
+flutter pub get
+flutter run
