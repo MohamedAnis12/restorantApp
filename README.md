@@ -57,3 +57,9 @@ git clone [https://github.com/MohamedAnis12/restorantApp.git](https://github.com
 cd restorantApp
 flutter pub get
 flutter run
+```
+## 👨‍💻 Author
+
+**Mohamed Anis**
+
+Flutter Developer | Software Engineer
